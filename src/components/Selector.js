@@ -1,10 +1,9 @@
 
 
-const Selector = (props) => {
-  console.log("Selectorのpropsです: ", props)
+const Selector = ({ setCountry, countriesJson }) => {
   return (
     <div className="flex justify-center">
-      <select onChange={(event) => props.setCountry(event.target.value)} className="
+      <select onChange={(event) => setCountry(event.target.value)} className="
         form-select
         appearance-none
         block
@@ -27,12 +26,11 @@ const Selector = (props) => {
         md:w-2/3
         md:justify-center"
         aria-label="Default select example">
-        <option>Select A Country</option>
-        {props.countriesJson.map((country, index) =>
+        <option>Japan</option>
+        {countriesJson.map((country, index) =>
           <option key={index} value={country.Slug}>{country.Country}</option>
         )}
       </select >
-      <button onClick={props.getCountryData} className="px-2 ml-2 rounded-full bg-gradient-to-r from-fuchsia-300 to-rose-200">GetData</button>
     </div >
   );
 };

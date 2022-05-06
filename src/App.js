@@ -6,7 +6,9 @@ import WorldPage from "./pages/WorldPage"
 
 function App() {
 
-  const [country, setCountry] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [country, setCountry] = useState("japan");
 
   const [countryData, setCountryData] = useState({
     date: "",
@@ -17,22 +19,26 @@ function App() {
 
   const [allCountriesData, setAllCountriesData] = useState([]);
 
-  const getCountryData = () => {
-    fetch(`https://api.covid19api.com/country/${country}`)
-      .then(res => res.json())
-      .then(data => {
-        setCountryData({
-          country: data[data.length - 1].Country,
-          date: data[data.length - 1].Date,
-          newConfirmed: data[data.length - 1].Confirmed,
-          newRecovered: data[data.length - 1].Recovered,
-          newDeaths: data[data.length - 1].Deaths,
+  useEffect(() => {
+    const getCountryData = () => {
+      setLoading(true);
+      fetch(`https://api.covid19api.com/country/${country}`)
+        .then(res => res.json())
+        .then(data => {
+          setCountryData({
+            country: data[data.length - 1].Country,
+            date: data[data.length - 1].Date,
+            newConfirmed: data[data.length - 1].Confirmed,
+            newRecovered: data[data.length - 1].Recovered,
+            newDeaths: data[data.length - 1].Deaths,
+          })
+          setLoading(false);
         })
-      })
-  };
+    };
+    getCountryData();
+  }, [country])
 
   useEffect(() => {
-    console.log("テスト")
     fetch("https://api.covid19api.com/summary")
       .then(res => res.json())
       .then(data => setAllCountriesData(data.Countries))
@@ -44,7 +50,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             {console.log(countryData)}
-            <Route exaxt path="/" element={<TopPage countriesJson={countriesJson} setCountry={setCountry} getCountryData={getCountryData} countryData={countryData} />} />
+            <Route exaxt path="/" element={<TopPage countriesJson={countriesJson} setCountry={setCountry} countryData={countryData} loading={loading} />} />
             <Route exact path="/world" element={<WorldPage allCountriesData={allCountriesData} />} />
           </Routes>
         </BrowserRouter>
