@@ -22,6 +22,7 @@ function App() {
       .then(res => res.json())
       .then(data => {
         setCountryData({
+          country: data[data.length - 1].Country,
           date: data[data.length - 1].Date,
           newConfirmed: data[data.length - 1].Confirmed,
           newRecovered: data[data.length - 1].Recovered,
